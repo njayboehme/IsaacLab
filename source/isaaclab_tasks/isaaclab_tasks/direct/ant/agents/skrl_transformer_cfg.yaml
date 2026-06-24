@@ -41,7 +41,10 @@ models:
           model_path: null,
           use_text: False,
           use_images: False,
-          # Policy model
+          # Learned model
+          use_adaptive: True,
+          scale: 6, # 4 or 6. Only needed when use_adaptive is True
+          zero_out: False,
           use_encoder: True,
           use_decoder: False,
           d_model: 64,
@@ -80,7 +83,10 @@ models:
           model_path: null,
           use_text: False,
           use_images: False,
-          # Policy model
+          # Learned model
+          use_adaptive: True,
+          scale: 6, # 4 or 6. Only needed when use_adaptive is True
+          zero_out: False,
           use_encoder: True,
           use_decoder: False,
           d_model: 64,
