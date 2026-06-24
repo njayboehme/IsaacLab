@@ -26,3 +26,13 @@ gym.register(
         "skrl_cfg_entry_point": f"{agents.__name__}:skrl_ppo_cfg.yaml",
     },
 )
+
+gym.register(
+    id="Isaac-Ant-Direct-vTransformer",
+    entry_point=f"{__name__}.ant_env:AntEnv",
+    disable_env_checker=True,
+    kwargs={
+        "env_cfg_entry_point": f"{__name__}.ant_env:AntEnvCfg",
+        "skrl_cfg_entry_point": f"{agents.__name__}:skrl_transformer_cfg.yaml",
+    },
+)
