@@ -23,25 +23,25 @@ export ISAACLAB_PATH="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && p
 #==
 
 # install system dependencies
-install_system_deps() {
-    # check if cmake is already installed
-    if command -v cmake &> /dev/null; then
-        echo "[INFO] cmake is already installed."
-    else
-        # check if running as root
-        if [ "$EUID" -ne 0 ]; then
-            echo "[INFO] Installing system dependencies..."
-            sudo apt-get update && sudo apt-get install -y --no-install-recommends \
-                cmake \
-                build-essential
-        else
-            echo "[INFO] Installing system dependencies..."
-            apt-get update && apt-get install -y --no-install-recommends \
-                cmake \
-                build-essential
-        fi
-    fi
-}
+# install_system_deps() {
+#     # check if cmake is already installed
+#     if command -v cmake &> /dev/null; then
+#         echo "[INFO] cmake is already installed."
+#     else
+#         # check if running as root
+#         if [ "$EUID" -ne 0 ]; then
+#             echo "[INFO] Installing system dependencies..."
+#             sudo apt-get update && sudo apt-get install -y --no-install-recommends \
+#                 cmake \
+#                 build-essential
+#         else
+#             echo "[INFO] Installing system dependencies..."
+#             apt-get update && apt-get install -y --no-install-recommends \
+#                 cmake \
+#                 build-essential
+#         fi
+#     fi
+# }
 
 # Returns success (exit code 0 / "true") if the detected Isaac Sim version starts with 4.5,
 # otherwise returns non-zero ("false"). Works with both symlinked binary installs and pip installs.
@@ -561,7 +561,7 @@ while [[ $# -gt 0 ]]; do
     case "$1" in
         -i|--install)
             # install system dependencies first
-            install_system_deps
+            # install_system_deps
             # install the python packages in IsaacLab/source directory
             echo "[INFO] Installing extensions inside the Isaac Lab repository..."
             python_exe=$(extract_python_exe)
@@ -667,12 +667,12 @@ while [[ $# -gt 0 ]]; do
             fi
             # run the formatter over the repository
             # check if pre-commit is installed
-            if ! command -v pre-commit &>/dev/null; then
-                echo "[INFO] Installing pre-commit..."
-                pip_command=$(extract_pip_command)
-                ${pip_command} pre-commit
-                sudo apt-get install -y pre-commit
-            fi
+            # if ! command -v pre-commit &>/dev/null; then
+            #     echo "[INFO] Installing pre-commit..."
+            #     pip_command=$(extract_pip_command)
+            #     ${pip_command} pre-commit
+            #     sudo apt-get install -y pre-commit
+            # fi
             # always execute inside the Isaac Lab directory
             echo "[INFO] Formatting the repository..."
             cd ${ISAACLAB_PATH}
