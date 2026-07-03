@@ -9,7 +9,7 @@ seed: 42
 # Models are instantiated using skrl's model instantiator utility
 # https://skrl.readthedocs.io/en/latest/api/utils/model_instantiators.html
 models:
-  separate: True
+  separate: False
   policy:  # see gaussian_model parameters
     class: TransformerGaussian
     clip_actions: False
@@ -67,42 +67,6 @@ models:
         input: OBSERVATIONS
         layers: [256, 128, 64]
         activations: elu
-        model_params: {
-          # Embedding
-          tokenization_method: all, # all, single, bin, groups
-          num_bins: 10, # int
-          bin_start: [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
-                     -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1], # same length as input
-          bin_end: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-                     1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1], # same length as input
-          groups: [0, 0, 0, 0, 0, 0, 0, 
-                   1, 1, 1, 
-                   2, 2, 
-                   3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 
-                   4, 4, 4, 4, 4, 4, 4, 4],
-          # Pooling
-          pooling_method: mean, # mean, max, last, CLS
-          # Pretrained model
-          model_path: null,
-          use_text: False,
-          use_images: False,
-          # Learned model
-          use_adaptive: False, # adaptive layer norm or not
-          zero_out: False, # zero adaln or not
-          use_encoder: True,
-          use_decoder: False,
-          d_model: 64,
-          nhead: 4,
-          bias_g: 2.0, # only needed if using GRU gate
-          layer_norm_type: null, # None or 'adaptive'
-          scale: 6, # Only needed if using adaptive layer norm [4, 6]
-          gate: 'GRU', # None or 'GRU'
-          dim_feedforward: 256,
-          batch_first: True,
-          norm_first: True,
-          num_layers: 1,
-
-        }
     output: ONE
 
 
@@ -117,15 +81,15 @@ memory:
 # https://skrl.readthedocs.io/en/latest/api/agents/ppo.html
 agent:
   class: PPO
-  rollouts: 16
-  learning_epochs: 4
-  mini_batches: 2
+  rollouts: 24
+  learning_epochs: 8
+  mini_batches: 4
   discount_factor: 0.99
   lambda: 0.95
-  learning_rate: 5.0e-04
-  learning_rate_scheduler: null
+  learning_rate: 1.0e-04
+  learning_rate_scheduler: KLAdaptiveLR
   learning_rate_scheduler_kwargs:
-    kl_threshold: 0.1
+    kl_threshold: 0.01
   state_preprocessor: RunningStandardScaler
   state_preprocessor_kwargs: null
   value_preprocessor: RunningStandardScaler
@@ -136,14 +100,14 @@ agent:
   ratio_clip: 0.2
   value_clip: 0.2
   clip_predicted_values: True
-  entropy_loss_scale: 0.0
-  value_loss_scale: 1.0
+  entropy_loss_scale: 0.001
+  value_loss_scale: 2.0
   kl_threshold: 0.0
-  rewards_shaper_scale: 0.6
+  rewards_shaper_scale: 0.01
   time_limit_bootstrap: False
   # logging and checkpoint
   experiment:
-    directory: "ant_direct_transformer"
+    directory: "franka_lift"
     experiment_name: ""
     write_interval: auto
     checkpoint_interval: auto
@@ -153,14 +117,14 @@ agent:
 # https://skrl.readthedocs.io/en/latest/api/trainers/sequential.html
 trainer:
   class: SequentialTrainer
-  timesteps: 8000
+  timesteps: 36000
   environment_info: log
 
 param_sweep:
   agent:
-    rollouts: [16, 32]
-    learning_epochs: [4]
-    mini_batches: [2, 4, 8, 16, 32]
+    rollouts: [24, 32]
+    learning_epochs: [8]
+    mini_batches: [4, 8, 16, 32]
     learning_rate: [1.0e-05, 5.0e-05, 1.0e-04, 5.0e-04, 1.0e-03]
     grad_norm_clip: 1.0
     ratio_clip: 0.2

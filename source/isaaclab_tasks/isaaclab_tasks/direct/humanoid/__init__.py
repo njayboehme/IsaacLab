@@ -26,3 +26,13 @@ gym.register(
         "skrl_cfg_entry_point": f"{agents.__name__}:skrl_ppo_cfg.yaml",
     },
 )
+
+gym.register(
+    id="Isaac-Humanoid-Direct-vTransformer",
+    entry_point=f"{__name__}.humanoid_env:HumanoidEnv",
+    disable_env_checker=True,
+    kwargs={
+        "env_cfg_entry_point": f"{__name__}.humanoid_env:HumanoidEnvCfg",
+        "skrl_cfg_entry_point": f"{agents.__name__}:skrl_transformer_ppo_cfg.yaml",
+    },
+)

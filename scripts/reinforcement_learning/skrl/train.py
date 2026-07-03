@@ -81,6 +81,7 @@ import os
 import random
 import time
 from datetime import datetime
+from pathlib import Path
 
 import gymnasium as gym
 import skrl
@@ -128,6 +129,31 @@ if args_cli.agent is None:
 else:
     agent_cfg_entry_point = args_cli.agent
     algorithm = agent_cfg_entry_point.split("_cfg")[0].split("skrl_")[-1].lower()
+
+def parameter_sweep(agent_cfg, log_root_path):
+    params_to_sweep = agent_cfg.get('param_sweep', None)
+    pth = ''
+    done = False
+    while not done:
+        if params_to_sweep is not None:
+            for k in params_to_sweep.keys():
+                if k == 'agent':
+                    for k_2, v_2 in params_to_sweep[k].items():
+                        if isinstance(v_2, list):
+                            sampled_param = random.sample(v_2, k=1)[0]
+                            agent_cfg[k][k_2] = sampled_param
+                            pth += f'{k_2}_{sampled_param}__'
+                elif k == 'models':
+                    for k_2, v_2 in params_to_sweep[k]['policy']['network']['model_params'].items():
+                        if isinstance(v_2, list):
+                            sampled_param = random.sample(v_2, k=1)[0]
+                            agent_cfg[k]['policy']['network'][0]['model_params'][k_2] = sampled_param
+                            agent_cfg[k]['value']['network'][0]['model_params'][k_2] = sampled_param
+                            pth += f'{k_2}_{sampled_param}__'
+            test_path = os.path.join(log_root_path, pth)
+            if not Path(test_path).exists():
+                done = True
+    return agent_cfg, pth
 
 
 @hydra_task_config(args_cli.task, agent_cfg_entry_point)
@@ -178,8 +204,11 @@ def main(env_cfg: ManagerBasedRLEnvCfg | DirectRLEnvCfg | DirectMARLEnvCfg, agen
     # set directory into agent config
     agent_cfg["agent"]["experiment"]["directory"] = log_root_path
     agent_cfg["agent"]["experiment"]["experiment_name"] = log_dir
+    
+    # agent_cfg, param_name = parameter_sweep(agent_cfg, log_root_path)
+    param_name = ''
     # update log_dir
-    log_dir = os.path.join(log_root_path, log_dir)
+    log_dir = os.path.join(log_root_path, param_name, log_dir)
 
     # dump the configuration into log-directory
     dump_yaml(os.path.join(log_dir, "params", "env.yaml"), env_cfg)

@@ -28,6 +28,16 @@ gym.register(
 )
 
 gym.register(
+    id="Isaac-Velocity-Flat-Anymal-C-Direct-vTransformer",
+    entry_point=f"{__name__}.anymal_c_env:AnymalCEnv",
+    disable_env_checker=True,
+    kwargs={
+        "env_cfg_entry_point": f"{__name__}.anymal_c_env_cfg:AnymalCFlatEnvCfg",
+        "skrl_cfg_entry_point": f"{agents.__name__}:skrl_transformer_flat_ppo_cfg.yaml",
+    },
+)
+
+gym.register(
     id="Isaac-Velocity-Rough-Anymal-C-Direct-v0",
     entry_point=f"{__name__}.anymal_c_env:AnymalCEnv",
     disable_env_checker=True,
