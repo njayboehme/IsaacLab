@@ -67,6 +67,42 @@ models:
         input: OBSERVATIONS
         layers: [256, 128, 64]
         activations: elu
+        model_params: {
+          # Embedding
+          tokenization_method: all, # all, single, bin, groups
+          num_bins: 10, # int
+          bin_start: [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+                     -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1], # same length as input
+          bin_end: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+                     1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1], # same length as input
+          groups: [0, 0, 0, 0, 0, 0, 0, 
+                   1, 1, 1, 
+                   2, 2, 
+                   3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 
+                   4, 4, 4, 4, 4, 4, 4, 4],
+          # Pooling
+          pooling_method: mean,
+          # Pretrained model
+          model_path: null,
+          use_text: False,
+          use_images: False,
+          # Learned model
+          use_adaptive: False, # adaptive layer or not
+          zero_out: False, # zero adaln or not
+          use_encoder: True,
+          use_decoder: False,
+          d_model: 64,
+          nhead: 4,
+          bias_g: 2.0, # only needed if using GRU gate
+          layer_norm_type: null, # null or 'adaptive'
+          scale: 6, # Only needed if using adaptive layer norm [4, 6]
+          gate: 'GRU', # numm or 'GRU'
+          dim_feedforward: 256,
+          batch_first: True,
+          norm_first: True,
+          num_layers: 1,
+
+        }
     output: ONE
 
 
