@@ -153,6 +153,8 @@ def parameter_sweep(agent_cfg, log_root_path):
             test_path = os.path.join(log_root_path, pth)
             if not Path(test_path).exists():
                 done = True
+        else:
+            done = True
     return agent_cfg, pth
 
 
