@@ -205,8 +205,8 @@ def main(env_cfg: ManagerBasedRLEnvCfg | DirectRLEnvCfg | DirectMARLEnvCfg, agen
     agent_cfg["agent"]["experiment"]["directory"] = log_root_path
     agent_cfg["agent"]["experiment"]["experiment_name"] = log_dir
     
-    # agent_cfg, param_name = parameter_sweep(agent_cfg, log_root_path)
-    param_name = ''
+    agent_cfg, param_name = parameter_sweep(agent_cfg, log_root_path)
+    # param_name = ''
     # update log_dir
     log_dir = os.path.join(log_root_path, param_name, log_dir)
 
