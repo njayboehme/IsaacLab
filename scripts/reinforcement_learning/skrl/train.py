@@ -198,6 +198,10 @@ def main(env_cfg: ManagerBasedRLEnvCfg | DirectRLEnvCfg | DirectMARLEnvCfg, agen
     print(f"[INFO] Logging experiment in directory: {log_root_path}")
     # specify directory for logging runs: {time-stamp}_{run_name}
     log_dir = datetime.now().strftime("%Y-%m-%d_%H-%M-%S") + f"_{algorithm}_{args_cli.ml_framework}"
+    # When doing parameters sweeps, put the info first for logging
+    agent_cfg, param_name = parameter_sweep(agent_cfg, log_root_path)
+    log_dir = os.path.join(param_name, log_dir)
+
     # The Ray Tune workflow extracts experiment name using the logging line below, hence,
     # do not change it (see PR #2346, comment-2819298849)
     print(f"Exact experiment name requested from command line: {log_dir}")
@@ -206,11 +210,7 @@ def main(env_cfg: ManagerBasedRLEnvCfg | DirectRLEnvCfg | DirectMARLEnvCfg, agen
     # set directory into agent config
     agent_cfg["agent"]["experiment"]["directory"] = log_root_path
     agent_cfg["agent"]["experiment"]["experiment_name"] = log_dir
-    
-    agent_cfg, param_name = parameter_sweep(agent_cfg, log_root_path)
-    # param_name = ''
-    # update log_dir
-    log_dir = os.path.join(log_root_path, param_name, log_dir)
+    log_dir = os.path.join(log_root_path, log_dir)
 
     # dump the configuration into log-directory
     dump_yaml(os.path.join(log_dir, "params", "env.yaml"), env_cfg)

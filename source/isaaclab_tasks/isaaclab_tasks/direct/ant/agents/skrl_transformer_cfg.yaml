@@ -9,7 +9,7 @@ seed: 42
 # Models are instantiated using skrl's model instantiator utility
 # https://skrl.readthedocs.io/en/latest/api/utils/model_instantiators.html
 models:
-  separate: True
+  separate: False
   policy:  # see gaussian_model parameters
     class: TransformerGaussian
     clip_actions: False
@@ -96,7 +96,7 @@ models:
           bias_g: 2.0, # only needed if using GRU gate
           layer_norm_type: null, # None or 'adaptive'
           scale: 6, # Only needed if using adaptive layer norm [4, 6]
-          gate: 'GRU', # None or 'GRU'
+          gate: 'None', # None or 'GRU'
           dim_feedforward: 256,
           batch_first: True,
           norm_first: True,
