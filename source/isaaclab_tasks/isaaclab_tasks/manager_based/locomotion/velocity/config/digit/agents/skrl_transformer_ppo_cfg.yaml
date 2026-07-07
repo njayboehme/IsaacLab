@@ -24,7 +24,7 @@ models:
         activations: elu
         model_params: {
           # Embedding
-          tokenization_method: single, # all, single, bin, groups
+          tokenization_method: all, # all, single, bin, groups
           num_bins: 10, # int
           bin_start: [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
                      -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1], # same length as input
@@ -51,11 +51,11 @@ models:
           bias_g: 2.0, # only needed if using GRU gate
           layer_norm_type: null, # null or 'adaptive'
           scale: 6, # Only needed if using adaptive layer norm [4, 6]
-          gate: null, # null or 'GRU'
+          gate: 'GRU', # null or 'GRU'
           dim_feedforward: 2048,
           batch_first: True,
           norm_first: True,
-          num_layers: 1,
+          num_layers: 4,
 
         }
     output: ACTIONS
