@@ -176,13 +176,13 @@ param_sweep:
       network:
           model_params: {
             # Embedding
-            tokenization_method: ['all', 'single'], # all, single, bin, groups
+            tokenization_method: ['all'], # all, single, bin, groups
             pooling_method: ['mean', 'max', 'CLS'],
             d_model: [32, 64, 128, 256, 512],
             nhead: [1, 2, 4],
             gate: [null, 'GRU'], # null or 'GRU'
             dim_feedforward: [128, 256, 1024, 2048],
-            num_layers: [1, 2, 4, 8, 16],
+            num_layers: [1, 2],
 
           }
       output: ACTIONS
@@ -190,14 +190,14 @@ param_sweep:
       network:
         - model_params: {
             # Embedding
-            tokenization_method: ['all', 'single'],
+            tokenization_method: ['all'],
             # Pooling
             pooling_method: ['mean', 'max', 'CLS'],
             d_model: [32, 64, 128, 256, 512],
             nhead: [1, 2, 4],
             gate: [null, 'GRU'], # null or 'GRU'
             dim_feedforward: [128, 256, 1024, 2048],
-            num_layers: [1, 2, 4, 8, 16],
+            num_layers: [1, 2],
 
           }
       output: ONE
