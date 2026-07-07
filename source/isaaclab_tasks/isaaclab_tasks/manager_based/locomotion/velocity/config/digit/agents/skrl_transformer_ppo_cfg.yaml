@@ -46,12 +46,12 @@ models:
           zero_out: False, # zero adaln or not
           use_encoder: True,
           use_decoder: False,
-          d_model: 128,
+          d_model: 256,
           nhead: 4,
           bias_g: 2.0, # only needed if using GRU gate
           layer_norm_type: null, # null or 'adaptive'
           scale: 6, # Only needed if using adaptive layer norm [4, 6]
-          gate: 'GRU', # null or 'GRU'
+          gate: null, # null or 'GRU'
           dim_feedforward: 2048,
           batch_first: True,
           norm_first: True,
