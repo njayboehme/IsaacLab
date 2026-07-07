@@ -46,8 +46,8 @@ models:
           zero_out: False, # zero adaln or not
           use_encoder: True,
           use_decoder: False,
-          d_model: 256,
-          nhead: 1,
+          d_model: 512,
+          nhead: 4,
           bias_g: 2.0, # only needed if using GRU gate
           layer_norm_type: null, # null or 'adaptive'
           scale: 6, # Only needed if using adaptive layer norm [4, 6]
@@ -55,7 +55,7 @@ models:
           dim_feedforward: 2048,
           batch_first: True,
           norm_first: True,
-          num_layers: 4,
+          num_layers: 16,
 
         }
     output: ACTIONS
