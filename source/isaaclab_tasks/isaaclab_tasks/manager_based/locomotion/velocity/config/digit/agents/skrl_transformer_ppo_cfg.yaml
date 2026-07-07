@@ -46,7 +46,7 @@ models:
           zero_out: False, # zero adaln or not
           use_encoder: True,
           use_decoder: False,
-          d_model: 512,
+          d_model: 128,
           nhead: 4,
           bias_g: 2.0, # only needed if using GRU gate
           layer_norm_type: null, # null or 'adaptive'
