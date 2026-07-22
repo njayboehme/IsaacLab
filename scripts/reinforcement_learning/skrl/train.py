@@ -144,11 +144,11 @@ def parameter_sweep(agent_cfg, log_root_path):
                             agent_cfg[k][k_2] = sampled_param
                             pth += f'{k_2}_{sampled_param}__'
                 elif k == 'models':
-                    for k_2, v_2 in params_to_sweep[k]['policy']['network']['model_params'].items():
+                    for k_2, v_2 in params_to_sweep[k]['policy']['network'].items():
                         if isinstance(v_2, list):
                             sampled_param = random.sample(v_2, k=1)[0]
-                            agent_cfg[k]['policy']['network'][0]['model_params'][k_2] = sampled_param
-                            agent_cfg[k]['value']['network'][0]['model_params'][k_2] = sampled_param
+                            agent_cfg[k]['policy']['network'][0][k_2] = sampled_param
+                            agent_cfg[k]['value']['network'][0][k_2] = sampled_param
                             pth += f'{k_2}_{sampled_param}__'
             test_path = os.path.join(log_root_path, pth)
             if not Path(test_path).exists():
@@ -229,7 +229,7 @@ def main(env_cfg: ManagerBasedRLEnvCfg | DirectRLEnvCfg | DirectMARLEnvCfg, agen
 
     # set the log directory for the environment (works for all environment types)
     env_cfg.log_dir = log_dir
-
+    env_cfg.action_chunk_size = agent_cfg['models']['policy'].get('action_chunk_size', 1)
     # create isaac environment
     env = gym.make(args_cli.task, cfg=env_cfg, render_mode="rgb_array" if args_cli.video else None)
 
