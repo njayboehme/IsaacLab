@@ -38,6 +38,27 @@ gym.register(
 )
 
 gym.register(
+    id="Isaac-Ant-Direct-vLSTM",
+    entry_point=f"{__name__}.ant_env:AntEnv",
+    disable_env_checker=True,
+    kwargs={
+        "env_cfg_entry_point": f"{__name__}.ant_env:AntEnvCfg",
+        "skrl_cfg_entry_point": f"{agents.__name__}:skrl_lstm_ppo_cfg.yaml",
+        "skrl_ppo_rnn_cfg_entry_point": f"{agents.__name__}:skrl_lstm_ppo_cfg.yaml",
+    },
+)
+
+gym.register(
+    id="Isaac-Ant-Direct-vMLPChunk",
+    entry_point=f"{__name__}.ant_env:AntEnv",
+    disable_env_checker=True,
+    kwargs={
+        "env_cfg_entry_point": f"{__name__}.ant_env:AntEnvCfg",
+        "skrl_ppo_chunked_cfg_entry_point": f"{agents.__name__}:skrl_mlp_chunked_ppo_cfg.yaml",
+    },
+)
+
+gym.register(
     id="Isaac-Ant-Direct-vMax",
     entry_point=f"{__name__}.ant_env:AntEnv",
     disable_env_checker=True,

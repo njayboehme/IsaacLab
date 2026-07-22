@@ -20,44 +20,54 @@ models:
     network:
       - name: net
         input: OBSERVATIONS
-        layers: [256, 128, 64]
-        activations: elu
-        model_params: {
-          # Embedding
-          tokenization_method: all, # all, single, bin, groups
-          num_bins: 10, # int
-          bin_start: [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
-                     -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1], # same length as input
-          bin_end: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-                     1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1], # same length as input
-          groups: [0, 0, 0, 0, 0, 0, 0, 
-                   1, 1, 1, 
-                   2, 2, 
-                   3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 
-                   4, 4, 4, 4, 4, 4, 4, 4],
-          # Pooling
-          pooling_method: mean,
-          # Pretrained model
-          model_path: null,
-          use_text: False,
-          use_images: False,
-          # Learned model
-          use_adaptive: False, # adaptive layer or not
-          zero_out: False, # zero adaln or not
-          use_encoder: True,
-          use_decoder: False,
-          d_model: 64,
-          nhead: 4,
-          bias_g: 2.0, # only needed if using GRU gate
-          layer_norm_type: null, # null or 'adaptive'
-          scale: 6, # Only needed if using adaptive layer norm [4, 6]
-          gate: 'GRU', # numm or 'GRU'
-          dim_feedforward: 256,
-          batch_first: True,
-          norm_first: True,
-          num_layers: 1,
+        # Embedding
+        tokenization_method: all # all, single, bin, groups
+        # Int: Number of bins to use for each part of the input when tokenization_method is bin
+        num_bins: null # int
+        # List of floats: For each dimentions of the input, specify its lower bound
+        bin_start: [] # same length as input
+        # List of floats: For each dimentions of the input, specify its upper bound
+        bin_end: []
+        # List of ints: For each dimension of the input, specify which group it is a part of. Only needed when tokenization_method is groups
+        groups: [0, 0, 0, 0, 0, 0, 0, 
+                  1, 1, 1, 
+                  2, 2, 
+                  3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 
+                  4, 4, 4, 4, 4, 4, 4, 4]
+        # Pooling transformer output: ['mean', 'max', 'CLS']
+        pooling_method: mean
+        
+        # Learned model
+        # zero adaln or normal adaln
+        zero_out: False
+        # null or 'adaptive'
+        layer_norm_type: null
+        # Only needed if using adaptive layer norm [4, 6]
+        scale: 6
 
-        }
+        # Using GRU Gate (Stabilizing Transformers for Reinforcement Learning)
+        bias_g: 2.0 # only needed if using GRU gate
+        gate: 'GRU' # numm or 'GRU'
+
+        # Model parameters
+        use_encoder: True
+        use_decoder: False
+        d_model: 64
+        nhead: 4
+        dim_feedforward: 256
+        batch_first: True
+        norm_first: True
+        num_layers: 1
+        # Action information
+        # Int: The number of future actions to predict 
+        num_pred_acts: 1
+        # How to predict future actions. If 'action_tokens', use tokens to predict the number of actions above. Otherwise, no extra tokens are used.
+        action_pred_type: null
+        # Pretrained model (if desired)
+        model_path: null
+        use_text: False
+        use_images: False
+        
     output: ACTIONS
   value:  # see deterministic_model parameters
     class: TransformerDeterministic
@@ -65,44 +75,50 @@ models:
     network:
       - name: net
         input: OBSERVATIONS
-        layers: [256, 128, 64]
-        activations: elu
-        model_params: {
-          # Embedding
-          tokenization_method: all, # all, single, bin, groups
-          num_bins: 10, # int
-          bin_start: [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
-                     -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1], # same length as input
-          bin_end: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-                     1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1], # same length as input
-          groups: [0, 0, 0, 0, 0, 0, 0, 
-                   1, 1, 1, 
-                   2, 2, 
-                   3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 
-                   4, 4, 4, 4, 4, 4, 4, 4],
-          # Pooling
-          pooling_method: mean, # mean, max, last, CLS
-          # Pretrained model
-          model_path: null,
-          use_text: False,
-          use_images: False,
-          # Learned model
-          use_adaptive: False, # adaptive layer norm or not
-          zero_out: False, # zero adaln or not
-          use_encoder: True,
-          use_decoder: False,
-          d_model: 64,
-          nhead: 4,
-          bias_g: 2.0, # only needed if using GRU gate
-          layer_norm_type: null, # None or 'adaptive'
-          scale: 6, # Only needed if using adaptive layer norm [4, 6]
-          gate: 'None', # None or 'GRU'
-          dim_feedforward: 256,
-          batch_first: True,
-          norm_first: True,
-          num_layers: 1,
+        # Embedding
+        tokenization_method: all # all, single, bin, groups
+        # Int: Number of bins to use for each part of the input when tokenization_method is bin
+        num_bins: null # int
+        # List of floats: For each dimentions of the input, specify its lower bound
+        bin_start: [] # same length as input
+        # List of floats: For each dimentions of the input, specify its upper bound
+        bin_end: []
+        # List of ints: For each dimension of the input, specify which group it is a part of. Only needed when tokenization_method is groups
+        groups: [0, 0, 0, 0, 0, 0, 0, 
+                  1, 1, 1, 
+                  2, 2, 
+                  3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 
+                  4, 4, 4, 4, 4, 4, 4, 4]
+        # Pooling transformer output: ['mean', 'max', 'CLS']
+        pooling_method: mean
+        
+        # Learned model
+        # Adaptive layer norm (Scalable Diffusion Models with Transformers)
+        use_adaptive: False # adaptive layer or not
+        # zero adaln or normal adaln
+        zero_out: False
+        # null or 'adaptive'
+        layer_norm_type: null
+        # Only needed if using adaptive layer norm [4, 6]
+        scale: 6
 
-        }
+        # Using GRU Gate (Stabilizing Transformers for Reinforcement Learning)
+        bias_g: 2.0 # only needed if using GRU gate
+        gate: 'GRU' # numm or 'GRU'
+
+        # Model parameters
+        use_encoder: True
+        use_decoder: False
+        d_model: 64
+        nhead: 4
+        dim_feedforward: 256
+        batch_first: True
+        norm_first: True
+        num_layers: 1
+        # Pretrained model (if desired)
+        model_path: null
+        use_text: False
+        use_images: False
     output: ONE
 
 
@@ -174,30 +190,25 @@ param_sweep:
       max_log_std: 2.0
       initial_log_std: 0.0
       network:
-          model_params: {
-            # Embedding
-            tokenization_method: ['all'], # all, single, bin, groups
-            pooling_method: ['mean', 'max', 'CLS'],
-            d_model: [32, 64, 128, 256, 512],
-            nhead: [1, 2, 4],
-            gate: [null, 'GRU'], # null or 'GRU'
-            dim_feedforward: [128, 256, 1024, 2048],
-            num_layers: [1, 2],
+          tokenization_method: ['all']
+          pooling_method: ['mean', 'max', 'CLS']
+          d_model: [32, 64, 128, 256, 512]
+          nhead: [1, 2, 4]
+          gate: [null, 'GRU']
+          dim_feedforward: [128, 256, 1024, 2048]
+          num_layers: [1, 2]
 
-          }
       output: ACTIONS
     value:  # see deterministic_model parameters
       network:
-        - model_params: {
-            # Embedding
-            tokenization_method: ['all'],
-            # Pooling
-            pooling_method: ['mean', 'max', 'CLS'],
-            d_model: [32, 64, 128, 256, 512],
-            nhead: [1, 2, 4],
-            gate: [null, 'GRU'], # null or 'GRU'
-            dim_feedforward: [128, 256, 1024, 2048],
-            num_layers: [1, 2],
+          # Embedding
+          tokenization_method: ['all']
+          # Pooling
+          pooling_method: ['mean', 'max', 'CLS']
+          d_model: [32, 64, 128, 256, 512]
+          nhead: [1, 2, 4]
+          gate: [null, 'GRU'] # null or 'GRU'
+          dim_feedforward: [128, 256, 1024, 2048]
+          num_layers: [1, 2]
 
-          }
       output: ONE
