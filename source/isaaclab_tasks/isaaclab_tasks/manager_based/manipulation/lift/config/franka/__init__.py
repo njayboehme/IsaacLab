@@ -33,6 +33,7 @@ gym.register(
     kwargs={
         "env_cfg_entry_point": f"{__name__}.joint_pos_env_cfg:FrankaCubeLiftEnvCfg",
         "skrl_cfg_entry_point": f"{agents.__name__}:skrl_transformer_ppo_cfg.yaml",
+        "skrl_ppo_chunked_cfg_entry_point": f"{agents.__name__}:skrl_transformer_chunked_ppo_cfg.yaml",
     },
     disable_env_checker=True,
 )

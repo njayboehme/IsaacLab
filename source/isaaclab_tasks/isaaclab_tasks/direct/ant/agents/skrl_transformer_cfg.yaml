@@ -17,6 +17,11 @@ models:
     min_log_std: -20.0
     max_log_std: 2.0
     initial_log_std: 0.0
+    # Action information
+    # Int: The number of future actions to predict 
+    action_chunk_size: 1
+    # How to predict future actions. If 'action_tokens', use tokens to predict the number of actions above. Otherwise, no extra tokens are used.
+    action_pred_type: null
     network:
       - name: net
         input: OBSERVATIONS
@@ -52,17 +57,13 @@ models:
         # Model parameters
         use_encoder: True
         use_decoder: False
-        d_model: 64
-        nhead: 4
-        dim_feedforward: 256
+        d_model: 128
+        nhead: 2
+        dim_feedforward: 1024
         batch_first: True
         norm_first: True
         num_layers: 1
-        # Action information
-        # Int: The number of future actions to predict 
-        num_pred_acts: 1
-        # How to predict future actions. If 'action_tokens', use tokens to predict the number of actions above. Otherwise, no extra tokens are used.
-        action_pred_type: null
+  
         # Pretrained model (if desired)
         model_path: null
         use_text: False
