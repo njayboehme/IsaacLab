@@ -144,9 +144,15 @@ def parameter_sweep(agent_cfg, log_root_path):
                             agent_cfg[k][k_2] = sampled_param
                             pth += f'{k_2}_{sampled_param}__'
                 elif k == 'models':
+                    action_pred_type = params_to_sweep[k]['policy'].get('action_pred_type', None)
+                    if isinstance(action_pred_type, list):
+                        sampled_param = random.sample(action_pred_type, k=1)[0]
+                        agent_cfg[k]['policy']['action_pred_type']= sampled_param
+                        pth += f'action_pred_type_{sampled_param}__'
                     for k_2, v_2 in params_to_sweep[k]['policy']['network'].items():
                         if isinstance(v_2, list):
                             sampled_param = random.sample(v_2, k=1)[0]
+                            # Sets policy and value parameters the same
                             agent_cfg[k]['policy']['network'][0][k_2] = sampled_param
                             agent_cfg[k]['value']['network'][0][k_2] = sampled_param
                             pth += f'{k_2}_{sampled_param}__'
