@@ -31,6 +31,11 @@ models:
     #   min_log_std: -20.0
     #   max_log_std: 2.0
     #   initial_log_std: 0.0
+    #   # null for no scaling, 
+    #     # an int/float to use a tanh and multiply by the value, 
+    #     # 'learn_vector' to learn a scaling vector after a tanh, 
+    #     # 'learn_scale' to learn a scaling number for all actions after a tanh
+    #   action_scale: null #null, 'learn_vector', 'learn_scale', number
     #   network:
     #     - name: net
     #       input: OBSERVATIONS
@@ -86,6 +91,7 @@ agent:
   rewards_shaper_scale: 0.6
   time_limit_bootstrap: False
   use_all_states: True
+  residual_begin_training: 360000 # THIS MUST BE MODULO 0 BY THE ROLLOUT SIZE!
   # logging and checkpoint
   experiment:
     directory: "ant_direct_chunked"
