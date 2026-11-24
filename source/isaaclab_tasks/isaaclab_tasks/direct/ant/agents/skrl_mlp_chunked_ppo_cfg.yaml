@@ -56,9 +56,8 @@ models:
 # Rollout memory
 # https://skrl.readthedocs.io/en/latest/api/memories/random.html
 memory:
-  class: RandomChunkedMemory
-  memory_size: 6  # the effective size is memory_size * chunk_size
-  action_chunk_size: *chunk_size
+  class: RandomMemory
+  memory_size: -1  # one entry per env step: must equal agent:rollouts (-1 = automatic)
 
 
 # PPO agent configuration (field names are from PPO_DEFAULT_CONFIG)
@@ -91,7 +90,8 @@ agent:
   rewards_shaper_scale: 0.6
   time_limit_bootstrap: False
   use_all_states: True
-  residual_begin_training: 360000 # THIS MUST BE MODULO 0 BY THE ROLLOUT SIZE!
+  ratio_clip_chunk_scaling: null # null, 'linear', 'exponential' (scale the chunk ratio clip by the executed chunk length) or 'per_step' (clip each action's ratio)
+  residual_begin_training: 360000 # residual acts from this timestep; trained from the first full rollout with it
   # logging and checkpoint
   experiment:
     directory: "ant_direct_chunked"

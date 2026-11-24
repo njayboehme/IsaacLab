@@ -126,9 +126,8 @@ models:
 # Rollout memory
 # https://skrl.readthedocs.io/en/latest/api/memories/random.html
 memory:
-  class: RandomChunkedMemory
-  memory_size: 6  # automatically determined (same as agent:rollouts)
-  action_chunk_size: *chunk_size
+  class: RandomMemory
+  memory_size: -1  # one entry per env step: must equal agent:rollouts (-1 = automatic)
 
 # PPO agent configuration (field names are from PPO_DEFAULT_CONFIG)
 # https://skrl.readthedocs.io/en/latest/api/agents/ppo.html
@@ -160,6 +159,7 @@ agent:
   rewards_shaper_scale: 0.6
   time_limit_bootstrap: False
   use_all_states: True
+  ratio_clip_chunk_scaling: null # null, 'linear', 'exponential' (scale the chunk ratio clip by the executed chunk length) or 'per_step' (clip each action's ratio)
   # logging and checkpoint
   experiment:
     directory: "ant_direct_transformer_chunked"
